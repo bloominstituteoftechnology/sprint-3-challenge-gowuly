@@ -45,7 +45,60 @@
     // ❗ Debug properly using the Console
 
     // 👉 CHALLENGE 1 - Integers
-    class Integers {
+      class Integers {
+
+      constructor(...args) {
+        this.ints = args.filter(arg => Number.isInteger(arg));
+      }
+
+      getAll() {
+        return this.ints;
+      }
+
+      getEvens() {
+        return this.ints.filter(num => num % 2 === 0);
+      }
+
+      getNegatives() {
+        return this.ints.filter(num => num < 0);
+      }
+
+      getAllSquared() {
+        return this.ints.map(num => num * num);
+      }
+
+      pop() {
+        return this.ints.pop();
+      }
+
+      push(int) {
+        if (Number.isInteger(int)) {
+          this.ints.push(int);
+        }
+        return this.ints;
+      }
+
+      getEveryNth(n) {
+        return this.ints.filter((_, index) => index % n === 0);
+      }
+
+      getAllReversed() {
+        return this.ints.slice().reverse();
+      }
+    }
+
+      
+      const myIntegers = new Integers(1, 2, 3, 4, 5, -6, -7, 8);
+      console.log(myIntegers.getAll()); // [1, 2, 3, 4, 5, -6, -7, 8]
+      console.log(myIntegers.getEvens()); // [2, 4, -6, 8]
+      console.log(myIntegers.getNegatives()); // [-6, -7]
+      console.log(myIntegers.getAllSquared()); // [1, 4, 9, 16, 25, 36, 49, 64]
+      console.log(myIntegers.pop()); // 8
+      console.log(myIntegers.push(10)); // [1, 2, 3, 4, 5, -6, -7, 10]
+      console.log(myIntegers.getEveryNth(2)); // [1, 3, 5, -7]
+      console.log(myIntegers.getAllReversed()); // [10, -7, -6, 5, 4, 3, 2, 1]
+
+
       // 🧠 Constructor takes **any** number of arguments, which are integers
       // 🧠 Instances have an `ints` property which is an array holding the integers above in the same order
       // 🧠 Implement a `getAll` method which returns the data held in the `ints` property
@@ -59,10 +112,58 @@
       // ❗ WARNING: except for `getAllReversed`, methods must respect the order of the integers
       // ❗ WARNING: note that none of the methods actually mutate the `ints` property
 
-    }
+    
 
     // 👉 CHALLENGE 2 NerfGun
-    class NerfGun {
+        class NerfGun {
+        constructor(totalProjectiles) {
+          this.totalCapacity = totalProjectiles;
+          this.currentCapacity = totalProjectiles;
+          this.safety = true; // Safety is on by default
+        }
+
+        shoot() {
+          if (this.currentCapacity > 0 && !this.safety) {
+            this.currentCapacity--;
+            return "Bang!";
+          } else {
+            return "Click!";
+          }
+        }
+
+        reload(num) {
+          if (typeof num !== 'number' || num <= 0) {
+            return "Error reloading!";
+          }
+
+          this.currentCapacity += num;
+          if (this.currentCapacity > this.totalCapacity) {
+            this.currentCapacity = this.totalCapacity;
+          }
+          return `${this.currentCapacity} projectiles left!`;
+        }
+
+        toggleSafety() {
+          this.safety = !this.safety;
+          if (this.safety) {
+            return "Safety enabled!";
+          } else {
+            return "Safety disabled!";
+          }
+        }
+      }
+
+        // Example usage:
+        const myNerfGun = new NerfGun(10); // Initialize with 10 projectiles
+        console.log(myNerfGun.shoot()); // "Click!" - Safety is on by default
+        console.log(myNerfGun.toggleSafety()); // "Safety disabled!" - Disengaging safety
+        console.log(myNerfGun.shoot()); // "Click!" - No ammo left
+        console.log(myNerfGun.reload(5)); // "5 projectiles left!" - Reload with 5 projectiles
+        console.log(myNerfGun.shoot()); // "Bang!" - Safety is off, and there are projectiles left
+        console.log(myNerfGun.reload(10)); // "10 projectiles left!" - Reload more than capacity
+        console.log(myNerfGun.toggleSafety()); // "Safety enabled!" - Engaging safety
+
+
       // 🧠 Constructor takes one argument: the total number of projectiles supported by the instance
       // 🧠 New instances initialize fully loaded and with the safety on
       // 🧠 Instances have a `shoot` method that takes no arguments:
@@ -77,10 +178,34 @@
       //      * When disengaging the safety, return "Safety disabled!"
       // 🌟 HINT: instances need to keep track of their maximum capacity as well as their current capacity
 
-    }
+    
 
     // 👉 CHALLENGE 3 EBook
-    class EBook {
+        class EBook {
+        constructor(text, charactersPerPage) {
+        this.text = text;
+        this.charactersPerPage = charactersPerPage;
+        this.currentPage = 0;
+      }
+
+      next() {
+        const nextPage = this.text.slice(this.currentPage * this.charactersPerPage, (this.currentPage + 1) * this.charactersPerPage);
+        if (nextPage.length > 0) {
+          this.currentPage++;
+          return nextPage;
+        } else {
+          return null;
+        }
+      }
+    }
+
+        // Example usage:
+        const ebook = new EBook('abcdefg', 3);
+        console.log(ebook.next()); // returns "abc"
+        console.log(ebook.next()); // returns "def"
+        console.log(ebook.next()); // returns "g"
+        console.log(ebook.next()); // returns null
+
       // 🧠 Constructor takes two arguments:
       //      * First arg is a string with the whole text of the book
       //      * Second arg is the number of characters contained in a single page of the book
@@ -96,10 +221,58 @@
       // 🌟 HINT: remember about the `slice` method which strings and arrays have
       // ❗ Feel free to implement `back`, although this is not required nor graded
 
-    }
+    
 
     // 👉 CHALLENGE 4 AntFarm
-    class AntFarm {
+        class AntFarm {
+        constructor(...antNames) {
+          this.ants = antNames.map(name => ({ name, health: 100 }));
+        }
+
+        work() {
+          const startingAntCount = this.ants.length;
+          
+          if (startingAntCount === 0) {
+            return "No ants here. Did you work them to death?";
+          }
+          
+          this.ants.forEach(ant => {
+            ant.health -= 20;
+            if (ant.health <= 0) {
+              this.removeDeadAnt(ant);
+            }
+          });
+          
+          return `${startingAntCount} ants starting work!`;
+        }
+
+        feed(name) {
+        let found = false;
+        
+        this.ants.forEach(ant => {
+          if (ant.name === name) {
+            ant.health += 15;
+            found = true;
+          }
+        });
+        
+        return found ? "Yum!" : `${name} not found!`;
+      }
+
+        removeDeadAnt(deadAnt) {
+          this.ants = this.ants.filter(ant => ant !== deadAnt);
+        }
+      }
+
+      // Example usage:
+      const farm = new AntFarm('Jess', 'Blake');
+      console.log(farm.ants); // [{name: 'Jess', health: 100}, {name: 'Blake', health: 100}]
+      console.log(farm.work()); // "2 ants starting work!"
+      console.log(farm.ants); // [{name: 'Jess', health: 80}, {name: 'Blake', health: 80}]
+      console.log(farm.feed('Jess')); // "Yum!"
+      console.log(farm.ants); // [{name: 'Jess', health: 95}, {name: 'Blake', health: 80}]
+              
+
       // 🧠 Constructor takes **any** number of arguments, which are strings: the names of your ants
       // 🧠 Instances of AntFarm have an `ants` property holding an array of ants:
       //      * Each ant is an object with a `name` prop and a `health` prop that starts at 100
@@ -131,7 +304,7 @@
       // 👉 HINT: if you are not feeling confident with map and filter, solve the problem with for loops,
       //      and with the piece of mind of all tests passing, refactor to use map/filter
 
-    }
+    
 
     // 🧪 TESTS, do not make any changes below this line ===================
     // 🧪 TESTS, do not make any changes below this line ===================
